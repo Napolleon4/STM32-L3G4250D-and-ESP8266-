@@ -139,11 +139,11 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  HAL_UART_Receive(&huart4, (uint8_t *)rxBuffer, sizeof(rxBuffer), 100);
+	  HAL_UART_Receive(&huart4, (uint8_t *)rxBuffer, sizeof(rxBuffer), 100); //Gets  ACK from esp8266 
 
 	  if (strcmp(rxBuffer, "S") == 0){
 
-          Zdata(0x2C, 0x2D);
+          Zdata(0x2C, 0x2D); // read Z axis value and send.
 	  }
 
 
@@ -422,19 +422,19 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 int16_t Zdata(uint8_t address_L,uint8_t address_H){
 	float temp ;
-	rawZ_H = ReadData(address_H);
+	rawZ_H = ReadData(address_H); // Read high value 
 	HAL_Delay(40);
-	rawZ_L = ReadData(address_L);
+	rawZ_L = ReadData(address_L); // Read low value 
 
 
-    Z = (int16_t)((rawZ_H << 8) | rawZ_L) ;
-    temp = (float)Z * 8.75*0.001 ;
+    Z = (int16_t)((rawZ_H << 8) | rawZ_L) ; // combine the high and low value
+    temp = (float)Z * 8.75*0.001 ; //   multiply by scale
     Z = (int16_t) temp;
-    dataZ[0] = rawZ_L ;
+    dataZ[0] = rawZ_L ; //send Low and Hig value with Uart and because UART sends 8 bit . 
     dataZ[1] = rawZ_H ;
 
 
-    HAL_UART_Transmit(&huart4,(uint8_t*)&dataZ,2, 100);
+    HAL_UART_Transmit(&huart4,(uint8_t*)&dataZ,2, 100); //send Low and Hig value with Uart and because UART sends 8 bit . 
 
 
 
@@ -491,18 +491,18 @@ void WriteData(uint8_t adress,uint8_t WData)
 uint8_t ReadData(uint8_t address){
 
 
-	  uint8_t Transmitdata= (0x80 | address);
+	  uint8_t Transmitdata= (0x80 | address); //  bit 0 should be 0 . You can check the relevant register in datasheet.
 
 
 
-	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_0,GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_0,GPIO_PIN_RESET); // reset the  NCS 
 
 	HAL_SPI_Transmit(&hspi2, &Transmitdata, 1, 100);
     HAL_Delay(40);
 	HAL_SPI_Receive(&hspi2, &Rdata, 1, 100);
 
 
-	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_0,GPIO_PIN_SET);
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_0,GPIO_PIN_SET); // Set the NCS
 
 	return Rdata ;
 
