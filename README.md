@@ -27,6 +27,12 @@ void WriteData(uint8_t adress,uint8_t WData)
 
 
 
+![espfoto](https://github.com/user-attachments/assets/4df6490f-6979-4e3d-b4cc-de0747119285)
+ESP9266 mini WiFi module does not support the latest version of the esp library, so use version 2.5.5. Additionally, since there is no grounding in the module, I used the following steps: I plugged the G0 and GND pins of the UART-USB converter into the breadboard. As seen in the figure, green and yellow cable is GND and red and orange cable is G0. In order to put the code into the ESP8266, we must plug it into the computer with G0 connected to GND and then disconnect G0 from GND. The red cable in between allows me to do this manually. There are people in YouTube videos who do this by soldering a button between G0 and GND.
+
+
+
+
 
 
 
